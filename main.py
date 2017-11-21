@@ -6,9 +6,6 @@
 import csv
 from datetime import datetime
 
-#Note: Large gap in data from 1994-09-21 to 1996-07-01
-#760 days missing in total
-
 #----------------------------------------------------------------------------------------------
 # Global Variables
 #----------------------------------------------------------------------------------------------
@@ -38,11 +35,11 @@ def parseData():
         accept = ['-','0','1','2','3','4','5','6','7','8','9']
         
         for row in reader:
-            date = row[5]
+            date = row[2]
             date = date.replace("'", '')
-            f_date = datetime.strptime(date, '%Y-%m-%d %H:%M')
+            f_date = datetime.strptime(date, '%Y-%m-%d')
             f_date = f_date.date()
-            temp = row[28]
+            temp = row[4]
             for char in temp:
                 if(char not in accept):
                     temp = temp.replace(char, '')
