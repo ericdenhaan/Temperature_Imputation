@@ -22,7 +22,7 @@ dates_temps = {}
 #The location of the dataset
 file_name = './dataset.csv'
 
-#the list of temperatures for the missing year
+#The list of temperatures for the missing year
 origTempRange = []
 
 #----------------------------------------------------------------------------------------------
@@ -91,7 +91,7 @@ def parseData():
             date = date.replace("'", '')
             f_date = datetime.strptime(date, '%Y-%m-%d').date()
 
-            temp = row[4]
+            temp = row[3]
             for char in temp:
                 if(char not in accept):
                     temp = temp.replace(char, '')
@@ -105,8 +105,16 @@ def daysBeforeAndAfter():
             continue
         origTempRange.append(dates_temps[missing_date + timedelta(days=i)])
 
+def isLeap(d):
+    if(d.year % 4 == 0 and d.year % 100 != 0):
+        return True
+    elif(d.year % 400 == 0):
+        return True
+    else:
+        return False
+
 def findAvg():
-    #the years other than the missing one
+    #The years other than the missing one
     otherYears = []
 
     #The list of temperatures for the other years, same dates
@@ -116,14 +124,21 @@ def findAvg():
     diffList = []
 
     for i in dates_temps:
-        if(i.month == missing_date.month and i.day == missing_date.day and i.year != missing_date.year):
-            otherYears.append(i)
+        if(i.month == missing_date.month
+            and (i.day == missing_date.day or i.day == missing_date.day - 1)
+            and i.year != missing_date.year):
+            if(isLeap(i) == True):
+                if(i.day != 28):
+                    otherYears.append(i)
+            else:
+                otherYears.append(i)
 
     listOfDates = []
     for i in dates_temps:
         for j in otherYears:
             if(i == j):
-                listOfDates.append(i)
+                if(i >= date(1990, 1, 1) and i <= date(2004, 12, 31)):
+                    listOfDates.append(i)
 
     listOfDates.sort()
 
@@ -159,7 +174,7 @@ def findAvg():
         avg2 = [10000 if x==minA else x for x in avg2]
         mins.append(minA)
 
-    #find the indices of the mins
+    #Find the indices of the mins
     tempList = []
     for i in range(3):
         for j in avg:
@@ -175,11 +190,11 @@ def findAvg():
         for j in newList:
             if(i == j):
                 finalAns += dates_temps[i]
-    finalAns = finalAns/3
+    finalAns = round(finalAns/3, 3)
 
     print("")
-    print "The estimated temperature for", missing_date, "is", finalAns, "degrees fahrenheit"
-    print "The actual temperature for", missing_date, "is", dates_temps[missing_date], "degrees fahrenheit"
+    print"The estimated temperature for", missing_date, "is", finalAns, "degrees fahrenheit"
+    print"The actual temperature for", missing_date, "is", dates_temps[missing_date], "degrees fahrenheit"
 
 gatherInput()
 parseData()
