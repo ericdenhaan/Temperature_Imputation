@@ -109,7 +109,7 @@ def findAvg(missing_date):
     #The list of temperatures for the other years, same dates
     otherYearsTemps = []
 
-    #The list of difference in temperatures 
+    #The list of difference in temperatures
     #between the missing year and all other years
     diffList = []
 
@@ -175,6 +175,7 @@ def findAvg(missing_date):
         for j in avg:
             if(mins[i] == j):
                 tempList.append(avg.index(j))
+                break
 
     newList = []
     for i in tempList:
